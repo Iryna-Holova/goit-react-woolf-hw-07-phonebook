@@ -1,20 +1,44 @@
 # Contact Book
 
-Refactor the
-[previous homework](https://github.com/Iryna-Holova/goit-react-woolf-hw-04-phonebook)
-code by adding state control using the
-[Redux Toolkit library](https://redux-toolkit.js.org/). Let the Redux state look
-like this.
+Perform refactoring of the
+[previous homework](https://github.com/Iryna-Holova/goit-react-woolf-hw-06-phonebook)
+code. Remove the code responsible for storing and reading contacts from the
+local storage, and add communication with the backend for storing contacts.
+
+## Backend
+
+Create your own personal backend for development with the UI service
+`mockapi.io`. Sign up using your GitHub account. Create a resource `contacts` to
+get your endpoint `/contacts`. Use resource constructor and describe the contact
+object.
+
+## State Form
+
+Add the load and error indicator handling to the Redux state. To do this, change
+the state form.
 
 ```js
 {
-  contacts: [],
+  contacts: {
+    items: [],
+    isLoading: false,
+    error: null
+  },
   filter: ""
 }
 ```
 
-- Create a repository with `configureStore()`
-- Use `createSlice()`
-- Create actions to save and delete a contact, and update the filter
-- Link React-components to Redux-logic with react-redux hooks
-- Use the Redux Persist library to save an array of contacts to local storage
+## Operations
+
+Use `createAsyncThunk` to declare asynchronous action generators and make HTTP
+requests. Do the processing of the actions and change data in Redux state with
+`createSlice`.
+
+Declare the following operations:
+
+- `fetchContacts` - get an array of contacts (GET method) by GET request. The
+  basic type of action `"contacts/fetchAll"`.
+- `addContact` - add contact (POST method). Basic type of action
+  `"contacts/addContact"`.
+- `deleteContact` - deletes a contact (DELETE method). Basic type of action
+  `"contacts/deleteContact"`.
