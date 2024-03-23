@@ -73,9 +73,16 @@
   border-radius: 20px;
   color: #ffffff;
   background-color: #1d4eb9;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.add_button:hover {
+.add_button:hover,
+.add_button:focus {
   background-color: rgb(34, 70, 148);
+}
+
+.add_button:disabled {
+  pointer-events: none;
+  opacity: 0.7;
 }

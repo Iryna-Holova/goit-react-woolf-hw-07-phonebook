@@ -3,26 +3,27 @@ import { useSelector, useDispatch } from 'react-redux';
 import { IconContext } from 'react-icons';
 import { FiUser, FiPhone } from 'react-icons/fi';
 import { getContacts } from 'store/selectors';
-import { addContact } from 'store/contacts-slice';
+import { addContactThunk } from 'store/contacts/thunks';
 import Section from 'components/Section/Section';
 import css from './ContactForm.module.css';
 
 const INITIAL_STATE = {
   name: '',
-  number: '',
+  phone: '',
 };
 
 const ContactForm = () => {
   const [formData, setFormData] = useState(INITIAL_STATE);
-  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const contacts = useSelector(getContacts);
   const nameInput = useRef(null);
+  const dispatch = useDispatch();
 
   const handleChange = ({ target: { name, value } }) => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = evt => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
     const normalizedName = formData.name.toLowerCase();
     const isExist = contacts.some(
@@ -32,9 +33,15 @@ const ContactForm = () => {
       nameInput.current.focus();
       return alert(`${formData.name} is already in contacts.`);
     }
-
-    dispatch(addContact(formData));
-    setFormData(INITIAL_STATE);
+    try {
+      setIsSubmitting(true);
+      await dispatch(addContactThunk(formData)).unwrap();
+      setFormData(INITIAL_STATE);
+    } catch (error) {
+      alert('Action failed :(');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -72,22 +79,26 @@ const ContactForm = () => {
           <input
             className={css.input}
             type="tel"
-            name="number"
-            value={formData.number}
-            id="number"
+            name="phone"
+            value={formData.phone}
+            id="phone"
             onChange={handleChange}
             placeholder="Number"
             pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
-          <label className={css.label} htmlFor="number">
+          <label className={css.label} htmlFor="phone">
             Number
           </label>
         </div>
 
-        <button className={css.add_button} type="submit">
-          Add contact
+        <button
+          className={css.add_button}
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {!isSubmitting ? 'Add contact' : 'Loading...'}
         </button>
       </form>
     </Section>

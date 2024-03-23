@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IconContext } from 'react-icons';
 import { FiSearch, FiX } from 'react-icons/fi';
 import { getFilter } from 'store/selectors';
-import { setFilter } from 'store/filter-slice';
+import { setFilter } from 'store/filter/slice';
 import Section from 'components/Section/Section';
 import css from './Filter.module.css';
 

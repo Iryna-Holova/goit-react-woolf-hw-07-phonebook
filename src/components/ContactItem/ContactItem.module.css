@@ -26,6 +26,8 @@
 .delete_button {
   line-height: 0;
   position: absolute;
+  width: 40px;
+  height: 40px;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
@@ -37,4 +39,21 @@
 .delete_button:hover,
 .delete_button:focus {
   color: #1d4eb9;
+}
+
+.delete_button:disabled {
+  pointer-events: none;
+}
+
+.loading_icon {
+  animation: spin 2s infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
+  }
 }
