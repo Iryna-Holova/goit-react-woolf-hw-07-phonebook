@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiUser, FiPhone, FiX } from 'react-icons/fi';
 import { CgSpinner } from 'react-icons/cg';
-import { getFilter } from 'store/selectors';
+import { selectFilter } from 'store/selectors';
 import { deleteContactThunk } from 'store/contacts/thunks';
 import { showError } from 'helpers/toaster';
 import HighlightSearchResult from 'components/HighlightSearchResult/HighlightSearchResult';
@@ -11,7 +11,7 @@ import css from './ContactItem.module.css';
 const ContactItem = ({ id, name, phone }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const dispatch = useDispatch();
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
 
   const handleDelete = async () => {
     try {

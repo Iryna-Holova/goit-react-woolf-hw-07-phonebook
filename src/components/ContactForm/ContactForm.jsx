@@ -2,10 +2,11 @@ import { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { IconContext } from 'react-icons';
 import { FiUser, FiPhone } from 'react-icons/fi';
-import { getContacts } from 'store/selectors';
+import { selectContacts } from 'store/selectors';
 import { addContactThunk } from 'store/contacts/thunks';
 import Section from 'components/Section/Section';
 import css from './ContactForm.module.css';
+import { showError } from 'helpers/toaster';
 
 const INITIAL_STATE = {
   name: '',
@@ -15,7 +16,7 @@ const INITIAL_STATE = {
 const ContactForm = () => {
   const [formData, setFormData] = useState(INITIAL_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
   const nameInput = useRef(null);
   const dispatch = useDispatch();
 
@@ -31,14 +32,15 @@ const ContactForm = () => {
     );
     if (isExist) {
       nameInput.current.focus();
-      return alert(`${formData.name} is already in contacts.`);
+      showError(`${formData.name} is already in contacts.`);
+      return;
     }
     try {
       setIsSubmitting(true);
       await dispatch(addContactThunk(formData)).unwrap();
       setFormData(INITIAL_STATE);
     } catch (error) {
-      alert('Action failed :(');
+      showError('Action failed :(');
     } finally {
       setIsSubmitting(false);
     }

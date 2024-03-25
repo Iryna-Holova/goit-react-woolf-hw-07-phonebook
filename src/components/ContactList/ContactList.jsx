@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getContacts,
-  getError,
-  getFilter,
-  getIsLoading,
+  selectError,
+  selectFilter,
+  selectIsLoading,
+  selectVisibleContacts,
 } from 'store/selectors';
 import { getContactsThunk } from 'store/contacts/thunks';
 import Section from 'components/Section/Section';
@@ -13,35 +13,24 @@ import css from './ContactList.module.css';
 
 const ContactList = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
-  const isLoading = useSelector(getIsLoading);
-  const error = useSelector(getError);
-  const filter = useSelector(getFilter);
+  const contacts = useSelector(selectVisibleContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const filter = useSelector(selectFilter);
 
   useEffect(() => {
     dispatch(getContactsThunk());
   }, [dispatch]);
 
-  const filterContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  const filteredContacts = filter ? filterContacts() : contacts;
-
   return (
-    <Section
-      title={filter ? `Results: ${filteredContacts.length}` : 'Contacts'}
-    >
+    <Section title={filter ? `Results: ${contacts.length}` : 'Contacts'}>
       {isLoading ? (
         <div className={css.loader}></div>
       ) : error ? (
         <b>Something went wrong...</b>
       ) : (
         <ul className={css.list}>
-          {filteredContacts.map(contact => (
+          {contacts.map(contact => (
             <ContactItem key={contact.id} {...contact} />
           ))}
         </ul>

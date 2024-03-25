@@ -4,38 +4,23 @@ import {
   deleteContactThunk,
   getContactsThunk,
 } from './thunks';
+import {
+  handleAddContact,
+  handleDeleteContact,
+  handleGetContactsFulfilled,
+  handlePending,
+  handleRejected,
+} from './handlers';
 
-const handlePending = state => {
-  state.error = null;
-  state.isLoading = true;
-};
-
-const handleRejected = (state, { error }) => {
-  state.isLoading = false;
-  state.error = error.message;
-};
-
-const handleGetContactsFulfilled = (state, { payload }) => {
-  state.isLoading = false;
-  state.items = payload;
-};
-
-const handleAddContact = (state, { payload }) => {
-  state.items.unshift(payload);
-};
-
-const handleDeleteContact = (state, { payload }) => {
-  const index = state.items.findIndex(({ id }) => id === payload.id);
-  state.items.splice(index, 1);
+const INITIAL_STATE = {
+  items: [],
+  isLoading: false,
+  error: null,
 };
 
 const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: {
-    items: [],
-    isLoading: false,
-    error: null,
-  },
+  initialState: INITIAL_STATE,
   extraReducers: builder => {
     builder
       .addCase(getContactsThunk.pending, handlePending)
